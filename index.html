@@ -8,6 +8,7 @@
     .player-card {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       max-width: 300px;
       height: 30px;
       background: #7A6F62; /* Ajusta el color de fondo */
@@ -25,7 +26,7 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      margin-right: 8px;
+      margin-left: 8px;
     }
     .play-btn svg {
       fill: #fff;
@@ -39,6 +40,7 @@
       background: #fff;
       border-radius: 2px;
       overflow: hidden;
+      margin-right: 8px;
     }
     .progress {
       position: absolute;
@@ -53,14 +55,14 @@
 <body>
 
 <div class="player-card">
+  <div class="progress-container" id="progressContainer">
+    <div class="progress" id="progressBar"></div>
+  </div>
   <button class="play-btn" id="playPauseBtn">
     <svg id="icon" viewBox="0 0 24 24">
       <path d="M8 5v14l11-7z" />
     </svg>
   </button>
-  <div class="progress-container" id="progressContainer">
-    <div class="progress" id="progressBar"></div>
-  </div>
 </div>
 
 <!-- YouTube IFrame API -->
