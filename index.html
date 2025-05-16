@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Audio Card</title>
+  <style>
+    .player-card {
+      display: flex;
+      align-items: center;
+      max-width: 300px;
+      height: 30px;
+      background: #7A6F62; /* Ajusta el color de fondo */
+      padding: 0 8px;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    .play-btn {
+      width: 24px;
+      height: 24px;
+      background-color: #7A6F62;
+      border: none;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    .play-btn svg {
+      fill: #fff;
+      width: 16px;
+      height: 16px;
+    }
+    .progress-container {
+      position: relative;
+      flex: 1;
+      height: 4px;
+      background: #fff;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      background: #7A6F62;
+    }
+  </style>
+</head>
+<body>
+
+<div class="player-card">
+  <button class="play-btn" id="playPauseBtn">
+    <svg id="icon" viewBox="0 0 24 24">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  </button>
+  <div class="progress-container" id="progressContainer">
+    <div class="progress" id="progressBar"></div>
+  </div>
+</div>
+
+<!-- YouTube IFrame API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  let player;
+  let isPlaying = false;
+  const playBtn = document.getElementById('playPauseBtn');
+  const progressBar = document.getElementById('progressBar');
+
+  // Inicializa el reproductor YouTube
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('yt-player', {
+      height: '0', width: '0',
+      videoId: 'TU_VIDEO_ID', // <- Reemplaza con tu ID de video
+      events: {
+        onStateChange: onPlayerStateChange
+      }
+    });
+  }
+
+  function onPlayerStateChange(event) {
+    if (event.data === YT.PlayerState.PLAYING) {
+      isPlaying = true;
+      switchIcon();
+      updateProgress();
+    } else {
+      isPlaying = false;
+      switchIcon();
+    }
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (!player) return;
+    if (isPlaying) player.pauseVideo();
+    else player.playVideo();
+  });
+
+  function switchIcon() {
+    const icon = document.getElementById('icon');
+    if (isPlaying) {
+      icon.innerHTML = '<path d="M6 19h4V5H6zm8-14v14h4V5z"/>';
+    } else {
+      icon.innerHTML = '<path d="M8 5v14l11-7z" />';
+    }
+  }
+
+  function updateProgress() {
+    const duration = player.getDuration();
+    function frame() {
+      if (isPlaying) {
+        const current = player.getCurrentTime();
+        const percent = (current / duration) * 100;
+        progressBar.style.width = percent + '%';
+        requestAnimationFrame(frame);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+</script>
+
+<!-- Contenedor oculto para el IFrame -->
+<div id="yt-player" style="display:none;"></div>
+</body>
+</html>
